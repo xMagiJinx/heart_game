@@ -11,4 +11,3 @@ class Settings:
         # Obstacle settings for red flags
         self.flag_appear = .02
         self.flag_speed = .5
-
