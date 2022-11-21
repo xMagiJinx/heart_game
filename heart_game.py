@@ -8,8 +8,10 @@ from settings import Settings
 from flags import Flags
 from game_stats import GameStats
 
+
 class HeartGame:
     """Create a main heart game"""
+
     def __init__(self):
         """Initialize the game"""
         pygame.init()
@@ -43,6 +45,7 @@ class HeartGame:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+
     def _update_screen(self):
         """Update images on the screen"""
         self.screen.fill(self.settings.bg_color)
@@ -80,8 +83,8 @@ class HeartGame:
             flag = Flags(self)
             self.flags.add(flag)
 
+
 if __name__ == '__main__':
     heart_game = HeartGame()
     heart_game.run_game()
     # Make a game instance and run it
-
