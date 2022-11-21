@@ -15,11 +15,11 @@ class Flags(Sprite):
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
 
-        flag_top_max = self.settings.screen_height - self.rect.height
-        self.rect.top = randint(0, flag_top_max)
+        flag_left_max = self.settings.screen_width - self.rect.width
+        self.rect.left = randint(0, flag_left_max)
 
         self.x = float(self.rect.x)
-        self.y = float(self.rect.y)
+        self.y = 0
 
     def update(self):
         """update flag positions"""
