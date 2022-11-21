@@ -1,3 +1,4 @@
+import random
 class Settings:
     """Store settings for heart game"""
     def __init__(self):
@@ -10,5 +11,5 @@ class Settings:
         self.heart_limit = 3
 
         # Obstacle settings for red flags
-        self.flag_appear = .005
+        self.flag_appear = .001
         self.flag_speed = .5
