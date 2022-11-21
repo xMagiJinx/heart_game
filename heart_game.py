@@ -33,6 +33,7 @@ class HeartGame:
             if self.stats.game_active:
                 self.player.update()
                 self.create_flags()
+                self._update_flags()
 
             self._update_screen()
 
@@ -45,13 +46,6 @@ class HeartGame:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
-
-    def _update_screen(self):
-        """Update images on the screen"""
-        self.screen.fill(self.settings.bg_color)
-        self.player.blitme()
-
-        pygame.display.flip()
 
     def _check_keydown_events(self, event):
         """Respond to keydown events"""
@@ -82,6 +76,25 @@ class HeartGame:
         if random() < self.settings.flag_appear:
             flag = Flags(self)
             self.flags.add(flag)
+    def _update_flags(self):
+        """Update flags on the screen"""
+        self.flags.update()
+        self._check_flag_edge()
+    def _check_flag_edge(self):
+        """Check if flag is off the edge"""
+        for flag in self.flags.sprites():
+            if flag.rect.bottom < 0:
+                # Just want the flags to go off the screen, no bad stuff
+                break
+
+    def _update_screen(self):
+        """Update images on the screen"""
+        self.screen.fill(self.settings.bg_color)
+        self.player.blitme()
+
+        self.flags.draw(self.screen)
+
+        pygame.display.flip()
 
 
 if __name__ == '__main__':
