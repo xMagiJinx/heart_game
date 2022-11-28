@@ -20,6 +20,8 @@ class Player:
         self.moving_right = False
         self.moving_left = False
 
+        self.score_value = 0
+
     def update(self):
         """Update the heart and movement"""
         if self.moving_right and self.rect.right < self.screen_rect.right:

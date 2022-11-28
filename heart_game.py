@@ -7,6 +7,10 @@ from player import Player
 from settings import Settings
 from flags import Flags
 from game_stats import GameStats
+from ghosts import Ghosts
+
+# create a menu by changing the game state
+game_state = 0
 
 
 class HeartGame:
@@ -14,17 +18,25 @@ class HeartGame:
 
     def __init__(self):
         """Initialize the game"""
+
         pygame.init()
         self.settings = Settings()
 
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Heart Game")
+        score_value = 0
+        font = pygame.font.Font(None, 32)
+        textX = 10
+        textY = 10
+
+        # self.show_score(textX, textY)
 
         self.stats = GameStats(self)
 
         self.player = Player(self)
         self.flags = pygame.sprite.Group()
+        self.ghosts = pygame.sprite.Group()
 
     def run_game(self):
         """Start the main loop to run the game"""
@@ -34,9 +46,15 @@ class HeartGame:
                 self.player.update()
                 self.create_flags()
                 self._update_flags()
+                self.create_ghosts()
+                self._update_ghosts()
 
             self._update_screen()
 
+    def show_score(x, y):
+        """Show the score"""
+        score = font.render("Score : " + str(score_value), True, (255, 255, 255))
+        self.screen.blit(score, (x, y))
     def _check_events(self):
         """Respond to events such as keypresses and mouse"""
         for event in pygame.event.get():
@@ -59,6 +77,9 @@ class HeartGame:
             self.player.moving_left = True
         elif event.key == pygame.K_d:
             self.player.moving_right = True
+        elif event.key == pygame.K_SPACE:
+            sys.exit()
+            # this will be the pause screen?
 
     def _check_keyup_events(self, event):
         """Respond to keyup events"""
@@ -76,9 +97,13 @@ class HeartGame:
         if random() < self.settings.flag_appear:
             flag = Flags(self)
             self.flags.add(flag)
+
     def _update_flags(self):
         """Update flags on the screen"""
         self.flags.update()
+        # check for flag and heart collision
+        if pygame.sprite.spritecollideany(self.player, self.flags):
+            self._player_hit()
         self._check_flag_edge()
     def _check_flag_edge(self):
         """Check if flag is off the edge"""
@@ -86,6 +111,30 @@ class HeartGame:
             if flag.rect.bottom < 0:
                 # Just want the flags to go off the screen, no bad stuff
                 break
+    def create_ghosts(self):
+        """Create ghosts that will fall down the screen"""
+        if random() < self.settings.ghost_appear:
+            ghost = Ghosts(self)
+            self.ghosts.add(ghost)
+
+    def _update_ghosts(self):
+        """Update ghosts on the screen"""
+        self.ghosts.update()
+        # check for ghost and heart collision
+        if pygame.sprite.spritecollideany(self.player, self.ghosts):
+            self._player_hit()
+    def _player_hit(self):
+        """Respond to getting hit by falling objects"""
+        if self.stats.hearts_left > 0:
+            self.stats.hearts_left -= 1
+            # add the image of the hearts in the top left corner
+
+            # restart the screen?
+            self.flags.empty()
+            self.ghosts.empty()
+            self.player.center_heart()
+        else:
+            self.stats.game_active = False
 
     def _update_screen(self):
         """Update images on the screen"""
@@ -93,6 +142,7 @@ class HeartGame:
         self.player.blitme()
 
         self.flags.draw(self.screen)
+        self.ghosts.draw(self.screen)
 
         pygame.display.flip()
 
