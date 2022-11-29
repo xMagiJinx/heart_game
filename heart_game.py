@@ -9,9 +9,6 @@ from flags import Flags
 from game_stats import GameStats
 from ghosts import Ghosts
 
-# create a menu by changing the game state
-game_state = 0
-
 
 class HeartGame:
     """Create a main heart game"""
@@ -40,16 +37,24 @@ class HeartGame:
 
     def run_game(self):
         """Start the main loop to run the game"""
-        while True:
-            self._check_events()
-            if self.stats.game_active:
-                self.player.update()
-                self.create_flags()
-                self._update_flags()
-                self.create_ghosts()
-                self._update_ghosts()
 
-            self._update_screen()
+        while True:
+            game_paused = True:
+                if game_paused = True:
+                    bkg_button.draw(screen)
+                    if play_button.draw(screen):
+                        game_paused = False
+
+                else:
+                    self._check_events()
+                    if self.stats.game_active:
+                        self.player.update()
+                    self.create_flags()
+                    self._update_flags()
+                    self.create_ghosts()
+                    self._update_ghosts()
+
+                self._update_screen()
 
     def show_score(x, y):
         """Show the score"""
@@ -64,7 +69,6 @@ class HeartGame:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
-
     def _check_keydown_events(self, event):
         """Respond to keydown events"""
         if event.key == pygame.K_q:
@@ -78,6 +82,7 @@ class HeartGame:
         elif event.key == pygame.K_d:
             self.player.moving_right = True
         elif event.key == pygame.K_SPACE:
+            game_state = 0
             sys.exit()
             # this will be the pause screen?
 
