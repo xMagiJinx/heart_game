@@ -25,3 +25,7 @@ class Flags(Sprite):
         """update flag positions"""
         self.y += self.settings.flag_speed
         self.rect.y = self.y
+        # check if the flag is off-screen and then remove itself
+        if not self.screen.get_rect().contains(self.rect):
+            self.kill()
+            # add point values because they were avoided

@@ -5,10 +5,12 @@ import pygame
 
 from player import Player
 from settings import Settings
+from pause import Pause
 from flags import Flags
 from game_stats import GameStats
 from ghosts import Ghosts
-
+from button import Button
+from lives import Lives
 
 class HeartGame:
     """Create a main heart game"""
@@ -28,34 +30,27 @@ class HeartGame:
         textY = 10
 
         # self.show_score(textX, textY)
+        self.menu = Pause(self)
 
         self.stats = GameStats(self)
 
         self.player = Player(self)
         self.flags = pygame.sprite.Group()
         self.ghosts = pygame.sprite.Group()
+        self.life = Lives(self)
 
     def run_game(self):
         """Start the main loop to run the game"""
-
         while True:
-            game_paused = True:
-                if game_paused = True:
-                    bkg_button.draw(screen)
-                    if play_button.draw(screen):
-                        game_paused = False
+            self._check_events()
+            if self.stats.game_active:
+                self.player.update()
+                self.create_flags()
+                self._update_flags()
+                self.create_ghosts()
+                self._update_ghosts()
 
-                else:
-                    self._check_events()
-                    if self.stats.game_active:
-                        self.player.update()
-                    self.create_flags()
-                    self._update_flags()
-                    self.create_ghosts()
-                    self._update_ghosts()
-
-                self._update_screen()
-
+            self._update_screen()
     def show_score(x, y):
         """Show the score"""
         score = font.render("Score : " + str(score_value), True, (255, 255, 255))
@@ -82,8 +77,14 @@ class HeartGame:
         elif event.key == pygame.K_d:
             self.player.moving_right = True
         elif event.key == pygame.K_SPACE:
+        #    bkg_menu_img = pygame.image.load("images/Item3.png").convert_alpha()
+        #    bkg_button = Button(250, 50, bkg_menu_img, 1)
+        #    bkg_button.draw(self.screen)
+            game_paused = True
+            print('screen')
+
             game_state = 0
-            sys.exit()
+            #self.stats.game_active = True
             # this will be the pause screen?
 
     def _check_keyup_events(self, event):
@@ -96,6 +97,8 @@ class HeartGame:
             self.player.moving_right = False
         elif event.key == pygame.K_a:
             self.player.moving_left = False
+        #elif event.key == pygame.K_SPACE:
+            #self.stats.game_active = True
 
     def create_flags(self):
         """Create flags that will fall down the screen"""
@@ -133,18 +136,20 @@ class HeartGame:
         if self.stats.hearts_left > 0:
             self.stats.hearts_left -= 1
             # add the image of the hearts in the top left corner
+            # need to change heart image to go down as the heart counter goes down
+            self.life.update(hearts_left = self.stats.hearts_left)
 
-            # restart the screen?
+            # restart the screen
             self.flags.empty()
             self.ghosts.empty()
             self.player.center_heart()
         else:
             self.stats.game_active = False
-
     def _update_screen(self):
         """Update images on the screen"""
         self.screen.fill(self.settings.bg_color)
         self.player.blitme()
+        self.life.blitme()
 
         self.flags.draw(self.screen)
         self.ghosts.draw(self.screen)

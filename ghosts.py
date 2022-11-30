@@ -25,3 +25,6 @@ class Ghosts(Sprite):
         """update ghost positions"""
         self.y += self.settings.ghost_speed
         self.rect.y = self.y
+        if not self.screen.get_rect().contains(self.rect):
+            self.kill()
+
