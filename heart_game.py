@@ -2,6 +2,7 @@ import sys
 from random import random
 
 import pygame
+from pygame import mixer
 
 from player import Player
 from settings import Settings
@@ -20,6 +21,11 @@ class HeartGame:
 
         pygame.init()
         self.settings = Settings()
+
+        # adding background music
+        mixer.init()
+        mixer.music.load('sounds/')
+        mixer.music.play()
 
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
@@ -150,6 +156,7 @@ class HeartGame:
         self.screen.fill(self.settings.bg_color)
         self.player.blitme()
         self.life.blitme()
+        # add the score
 
         self.flags.draw(self.screen)
         self.ghosts.draw(self.screen)
