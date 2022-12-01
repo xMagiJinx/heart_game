@@ -24,7 +24,7 @@ class HeartGame:
 
         # adding background music
         mixer.init()
-        mixer.music.load('sounds/')
+        mixer.music.load('sounds/Falling-for-u-lofi-hiphop-mix.ogg')
         mixer.music.play()
 
         self.screen = pygame.display.set_mode(
