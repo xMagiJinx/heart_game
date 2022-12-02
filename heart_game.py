@@ -24,6 +24,7 @@ class HeartGame:
         """Initialize the game"""
 
         pygame.init()
+
         self.settings = Settings()
         self.clock = pygame.time.Clock()
 
@@ -37,7 +38,7 @@ class HeartGame:
         self.bg = draw_background(self.WINDOW_SIZE)
 
         pygame.display.set_caption("Heart Game")
-        self.font = pygame.font.Font(None, 32)
+        self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
 
         # self.menu = Pause(self)
 
@@ -167,6 +168,8 @@ class HeartGame:
             pygame.time.delay(999)
         else:
             self.stats.game_active = False
+            end_sfx = pygame.mixer.Sound('sounds/Game Over.wav')
+            end_sfx.play()
 
     def _player_gain(self):
         """Respond to powerup"""
@@ -178,7 +181,7 @@ class HeartGame:
             self.ghosts.empty()
             self.battery.empty()
             self.lightning.empty()
-            self.player.score_value += .1
+            self.player.score_value += 3
 
     def _player_gain_health(self):
         """Respond to battery powerup"""
@@ -194,7 +197,24 @@ class HeartGame:
         elif 2 <= self.stats.hearts_left < 3:
             self.stats.hearts_left += 1
             self.life.update(self.stats.hearts_left)
-        self.player.score_value += .1
+        self.player.score_value += 3
+
+    def updateFile(self):
+        """Save scores from the game"""
+        # have the text file and open it
+        f = open('scores.txt')
+        file = f.readlines()
+        last = int(file[0])
+        score = self.player.score_value
+
+        if last < int(score):
+            f.close()
+            file = open('scores.txt', 'w')
+            file.write(str(score))
+            file.close()
+
+            return score
+        return last
 
     def _update_screen(self):
         """Update images on the screen"""
@@ -205,7 +225,9 @@ class HeartGame:
         self.life.blitme()
         # add the score
         img = self.font.render(f"Score: {int(self.player.score_value)}", True, (214, 58, 56))
-        self.screen.blit(img, (50, 60))
+        self.screen.blit(img, (50, 75))
+        bestScore = self.font.render(f"Best Score: {str(updateFile())}", True, (255, 0, 0))
+        self.screen.blit(bestScore, (50, 120))
 
         self.flags.draw(self.screen)
         self.ghosts.draw(self.screen)

@@ -18,11 +18,11 @@ class Settings:
         self.heart_limit = 3
 
         # Obstacle settings for red flags
-        self.flag_appear = .001
+        self.flag_appear = .01
         self.flag_speed = .5
 
         self.ghost_appear = .001
         self.ghost_speed = .1
 
-        self.good_appear = .01
+        self.good_appear = .0001
         self.good_speed = .8
