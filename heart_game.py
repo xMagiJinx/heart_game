@@ -4,7 +4,7 @@ from random import random
 import pygame
 from pygame import mixer
 
-from background import draw_background, TILE
+from background import draw_background
 from player import Player
 from settings import Settings
 from pause import Pause
@@ -15,6 +15,7 @@ from lightning import Lightning
 from battery import Battery
 from button import Button
 from lives import Lives
+
 
 class HeartGame:
     """Create a main heart game"""
@@ -62,15 +63,17 @@ class HeartGame:
 
             self._update_screen()
             self.clock.tick(175)
+
     def _check_events(self):
-         """Respond to events such as keypresses and mouse"""
-         for event in pygame.event.get():
+        """Respond to events such as keypresses and mouse"""
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+
     def _check_keydown_events(self, event):
         """Respond to keydown events"""
         if event.key == pygame.K_q:
@@ -84,14 +87,14 @@ class HeartGame:
         elif event.key == pygame.K_d:
             self.player.moving_right = True
         elif event.key == pygame.K_SPACE:
-        #    bkg_menu_img = pygame.image.load("images/Item3.png").convert_alpha()
-        #    bkg_button = Button(250, 50, bkg_menu_img, 1)
-        #    bkg_button.draw(self.screen)
+            #    bkg_menu_img = pygame.image.load("images/Item3.png").convert_alpha()
+            #    bkg_button = Button(250, 50, bkg_menu_img, 1)
+            #    bkg_button.draw(self.screen)
             game_paused = True
             print('screen')
 
             game_state = 0
-            #self.stats.game_active = True
+            # self.stats.game_active = True
             # this will be the pause screen?
 
     def _check_keyup_events(self, event):
@@ -113,6 +116,7 @@ class HeartGame:
         elif random() < self.settings.ghost_appear:
             ghost = Ghosts(self)
             self.ghosts.add(ghost)
+
     def update_enemies(self):
         """Update flags on the screen"""
         self.flags.update()
@@ -127,9 +131,10 @@ class HeartGame:
         """Create good stuff or temporary powerups that fall down the screen"""
         if random() < self.settings.good_appear:
             good = Lightning(self)
+            self.lightning.add(good)
+        if random() < self.settings.good_appear:
             good2 = Battery(self)
             self.battery.add(good2)
-            self.lightning.add(good)
 
     def update_goodstuff(self):
         """Update powerups"""
@@ -139,7 +144,6 @@ class HeartGame:
             self._player_gain()
         if pygame.sprite.spritecollideany(self.player, self.battery):
             self._player_gain_health()
-
 
     def _player_hit(self):
         """Respond to getting hit by falling objects"""
@@ -155,19 +159,25 @@ class HeartGame:
             # restart the screen
             self.flags.empty()
             self.ghosts.empty()
+            self.battery.empty()
+            self.lightning.empty()
+
             self.player.center_heart()
             self.player.score_value -= 5
             pygame.time.delay(999)
         else:
             self.stats.game_active = False
+
     def _player_gain(self):
         """Respond to powerup"""
         if self.stats.hearts_left >= 0:
-            restart_sfx = pygame.mixer.Sound('sounds/Fruit collect 1.wav')
+            restart_sfx = pygame.mixer.Sound('sounds/Balloon Pop 1.wav')
             restart_sfx.play()
 
             self.flags.empty()
             self.ghosts.empty()
+            self.battery.empty()
+            self.lightning.empty()
             self.player.score_value += .1
 
     def _player_gain_health(self):
@@ -185,9 +195,6 @@ class HeartGame:
             self.stats.hearts_left += 1
             self.life.update(self.stats.hearts_left)
         self.player.score_value += .1
-        print(self.stats.hearts_left)
-
-
 
     def _update_screen(self):
         """Update images on the screen"""
@@ -198,7 +205,7 @@ class HeartGame:
         self.life.blitme()
         # add the score
         img = self.font.render(f"Score: {int(self.player.score_value)}", True, (214, 58, 56))
-        self.screen.blit(img, (50,60))
+        self.screen.blit(img, (50, 60))
 
         self.flags.draw(self.screen)
         self.ghosts.draw(self.screen)
