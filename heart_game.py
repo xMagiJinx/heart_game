@@ -8,14 +8,13 @@ from pygame import mixer
 from background import draw_background
 from player import Player
 from settings import Settings
-from pause import Pause
 from flags import Flags
 from game_stats import GameStats
 from ghosts import Ghosts
 from lightning import Lightning
 from battery import Battery
-from button import Button
 from lives import Lives
+
 
 
 class HeartGame:
@@ -23,8 +22,6 @@ class HeartGame:
 
     def __init__(self):
         """Initialize the game"""
-
-        # put the pygame.init into a different game_state
         pygame.init()
 
         self.settings = Settings()
@@ -42,8 +39,6 @@ class HeartGame:
         pygame.display.set_caption("Heart Game")
         self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
 
-        # self.menu = Pause(self)
-
         self.stats = GameStats(self)
 
         self.player = Player(self)
@@ -53,16 +48,6 @@ class HeartGame:
         self.lightning = pygame.sprite.Group()
         self.battery = pygame.sprite.Group()
 
-    def menu(self):
-        """Make a beginning menu"""
-        intro = True
-        while intro:
-            for event in pygame.event.get():
-                print(event)
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
-            play_text = self.font.render("PLAY", True, (255,255,255))
     def run_game(self):
         """Start the main loop to run the game"""
         while True:
@@ -76,7 +61,6 @@ class HeartGame:
 
             self._update_screen()
             self.clock.tick(175)
-
     def _check_events(self):
         """Respond to events such as keypresses and mouse"""
         for event in pygame.event.get():
@@ -86,7 +70,6 @@ class HeartGame:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
-
     def _check_keydown_events(self, event):
         """Respond to keydown events"""
         if event.key == pygame.K_q:
@@ -99,15 +82,6 @@ class HeartGame:
             self.player.moving_left = True
         elif event.key == pygame.K_d:
             self.player.moving_right = True
-        elif event.key == pygame.K_SPACE:
-            #    bkg_menu_img = pygame.image.load("images/Item3.png").convert_alpha()
-            #    bkg_button = Button(250, 50, bkg_menu_img, 1)
-            #    bkg_button.draw(self.screen)
-            game_paused = True
-            print('screen')
-
-            # self.stats.game_active = True
-            # this will be the pause screen?
 
     def _check_keyup_events(self, event):
         """Respond to keyup events"""
@@ -204,6 +178,10 @@ class HeartGame:
             img_rect = img.get_rect()
             img_rect.midtop = self.screen.get_rect().midtop
             self.screen.blit(img, img_rect)
+
+            bestScore = self.font.render(f"Best Score: {str(self.updateFile())}", True, (230, 230, 230))
+            self.screen.blit(bestScore, ((self.settings.screen_width/2) - 105, (self.settings.screen_height/2) + 55))
+
             self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
 
             pygame.display.flip()
@@ -222,8 +200,9 @@ class HeartGame:
                         self.lightning.empty()
 
                         self.stats.hearts_left = 3
+                        self.life.update(self.stats.hearts_left)
                         self.player.score_value = 0
-                        
+
                         return 0
 
     def _player_gain(self):
@@ -254,22 +233,22 @@ class HeartGame:
             self.life.update(self.stats.hearts_left)
         self.player.score_value += 3
 
-    """#def updateFile(self):
-        Save scores from the game
-    #    # have the text file and open it
-    #    f = open('scores.txt')
-    #    file = f.readlines()
-    #    last = int(file[0])
-    #    score = self.player.score_value
+    def updateFile(self):
+        #Save scores from the game
+        # have the text file and open it
+        f = open('scores.txt')
+        file = f.readlines()
+        last = int(file[0])
+        score = int(self.player.score_value)
 
-    #    if last < int(score):
-    #        f.close()
-    #        file = open('scores.txt', 'w')
-    #        file.write(str(score))
-    #        file.close()
+        if last < int(score):
+            f.close()
+            file = open('scores.txt', 'w')
+            file.write(str(score))
+            file.close()
 
-    #        return score
-        return last"""
+            return score
+        return last
 
     def _update_screen(self):
         """Update images on the screen"""
@@ -281,8 +260,6 @@ class HeartGame:
         # add the score
         img = self.font.render(f"Score: {int(self.player.score_value)}", True, (214, 58, 56))
         self.screen.blit(img, (50, 75))
-        # bestScore = self.font.render(f"Best Score: {str(updateFile())}", True, (255, 0, 0))
-        # self.screen.blit(bestScore, (50, 120))
 
         self.flags.draw(self.screen)
         self.ghosts.draw(self.screen)
