@@ -16,7 +16,6 @@ from battery import Battery
 from lives import Lives
 
 
-
 class HeartGame:
     """Create a main heart game"""
 
@@ -61,6 +60,7 @@ class HeartGame:
 
             self._update_screen()
             self.clock.tick(175)
+
     def _check_events(self):
         """Respond to events such as keypresses and mouse"""
         for event in pygame.event.get():
@@ -70,6 +70,7 @@ class HeartGame:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+
     def _check_keydown_events(self, event):
         """Respond to keydown events"""
         if event.key == pygame.K_q:
@@ -156,6 +157,7 @@ class HeartGame:
             end_sfx = pygame.mixer.Sound('sounds/Game Over.wav')
             end_sfx.play()
             self.end_game()
+
     def end_game(self):
         """Ends the game and resets the information"""
         while True:
@@ -180,7 +182,8 @@ class HeartGame:
             self.screen.blit(img, img_rect)
 
             bestScore = self.font.render(f"Best Score: {str(self.updateFile())}", True, (230, 230, 230))
-            self.screen.blit(bestScore, ((self.settings.screen_width/2) - 105, (self.settings.screen_height/2) + 55))
+            self.screen.blit(bestScore,
+                             ((self.settings.screen_width / 2) - 105, (self.settings.screen_height / 2) + 55))
 
             self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
 
@@ -234,13 +237,13 @@ class HeartGame:
         self.player.score_value += 3
 
     def updateFile(self):
-        #Save scores from the game
+        # Save scores from the game
         # have the text file and open it
         f = open('scores.txt')
         file = f.readlines()
         last = int(file[0])
         score = int(self.player.score_value)
-
+        # cycles through the text files and sees which is the largest
         if last < int(score):
             f.close()
             file = open('scores.txt', 'w')
@@ -269,8 +272,10 @@ class HeartGame:
         self.player.blitme()
 
         pygame.display.flip()
+
+
 game_state = 0
 
 heart_game = HeartGame()
 heart_game.run_game()
-    # Make a game instance and run it
+# Make a game instance and run it

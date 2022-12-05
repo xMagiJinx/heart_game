@@ -8,12 +8,6 @@ class Settings:
         self.screen_width = 1000
         self.screen_height = 600
 
-        #self.screen_width = 10 * self.TILE
-        #self.screen_height = 8 * self.TILE
-        self.bg_color = pygame.image.load('images/demo01_PixelSky_1920x1080.png')
-        bg_img = self.bg_color.get_rect()
-
-
         self.heart_speed = 3
         self.heart_limit = 0
 
