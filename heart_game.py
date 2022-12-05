@@ -225,6 +225,7 @@ class HeartGame:
         restart_sfx = pygame.mixer.Sound('sounds/Fruit collect 1.wav')
         restart_sfx.play()
         self.battery.empty()
+        # check what health the player has so that it only adds one heart
         if 0 <= self.stats.hearts_left < 1:
             self.stats.hearts_left += 1
             self.life.update(self.stats.hearts_left)

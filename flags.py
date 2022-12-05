@@ -14,7 +14,7 @@ class Flags(Sprite):
 
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
-
+        # spawn in random locations and move down the screen
         flag_left_max = self.settings.screen_width - self.rect.width
         self.rect.left = randint(0, flag_left_max)
 

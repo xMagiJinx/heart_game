@@ -9,7 +9,7 @@ class Settings:
         self.screen_height = 600
 
         self.heart_speed = 3
-        self.heart_limit = 0
+        self.heart_limit = 3
 
         # Obstacle settings for red flags
         self.flag_appear = .01
