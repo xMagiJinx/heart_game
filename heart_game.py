@@ -55,8 +55,14 @@ class HeartGame:
 
     def menu(self):
         """Make a beginning menu"""
-        self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
-        play_text = self.font.render("PLAY", True, (255,255,255))
+        intro = True
+        while intro:
+            for event in pygame.event.get():
+                print(event)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
+            play_text = self.font.render("PLAY", True, (255,255,255))
     def run_game(self):
         """Start the main loop to run the game"""
         while True:
@@ -172,9 +178,53 @@ class HeartGame:
             self.player.score_value -= 5
             pygame.time.delay(999)
         else:
-            self.stats.game_active = False
+            # self.stats.game_active = False
             end_sfx = pygame.mixer.Sound('sounds/Game Over.wav')
             end_sfx.play()
+            self.end_game()
+    def end_game(self):
+        """Ends the game and resets the information"""
+        while True:
+            self.screen.fill((186, 209, 245))
+            # placing all the words
+            self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 15)
+            word = "GAME OVER - Press Spacebar"
+            end = self.font.render(word, True, (230, 230, 230))
+            img_rect = end.get_rect()
+            img_rect.center = self.screen.get_rect().center
+            self.screen.blit(end, img_rect)
+            word = "'If you ignore the red flags, embrace the heartache to come'"
+            self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 10)
+            img = self.font.render(word, True, (20, 20, 20))
+            img_rect = img.get_rect()
+            img_rect.midbottom = self.screen.get_rect().midbottom
+            self.screen.blit(img, img_rect)
+            self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 15)
+            img = self.font.render(f"Score: {int(self.player.score_value)}", True, (20, 20, 20))
+            img_rect = img.get_rect()
+            img_rect.midtop = self.screen.get_rect().midtop
+            self.screen.blit(img, img_rect)
+            self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
+
+            pygame.display.flip()
+            # respond to the key presses to restart
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        sys.exit()
+                    if event.key == pygame.K_SPACE:
+                        # restart the screen
+                        self.flags.empty()
+                        self.ghosts.empty()
+                        self.battery.empty()
+                        self.lightning.empty()
+
+                        self.stats.hearts_left = 3
+                        self.player.score_value = 0
+                        
+                        return 0
 
     def _player_gain(self):
         """Respond to powerup"""
