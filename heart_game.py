@@ -2,6 +2,7 @@ import sys
 from random import random
 
 import pygame
+
 from pygame import mixer
 
 from background import draw_background
@@ -23,6 +24,7 @@ class HeartGame:
     def __init__(self):
         """Initialize the game"""
 
+        # put the pygame.init into a different game_state
         pygame.init()
 
         self.settings = Settings()
@@ -51,6 +53,10 @@ class HeartGame:
         self.lightning = pygame.sprite.Group()
         self.battery = pygame.sprite.Group()
 
+    def menu(self):
+        """Make a beginning menu"""
+        self.font = pygame.font.Font('fonts/QuinqueFive.ttf', 27)
+        play_text = self.font.render("PLAY", True, (255,255,255))
     def run_game(self):
         """Start the main loop to run the game"""
         while True:
@@ -94,7 +100,6 @@ class HeartGame:
             game_paused = True
             print('screen')
 
-            game_state = 0
             # self.stats.game_active = True
             # this will be the pause screen?
 
@@ -199,22 +204,22 @@ class HeartGame:
             self.life.update(self.stats.hearts_left)
         self.player.score_value += 3
 
-    def updateFile(self):
-        """Save scores from the game"""
-        # have the text file and open it
-        f = open('scores.txt')
-        file = f.readlines()
-        last = int(file[0])
-        score = self.player.score_value
+    """#def updateFile(self):
+        Save scores from the game
+    #    # have the text file and open it
+    #    f = open('scores.txt')
+    #    file = f.readlines()
+    #    last = int(file[0])
+    #    score = self.player.score_value
 
-        if last < int(score):
-            f.close()
-            file = open('scores.txt', 'w')
-            file.write(str(score))
-            file.close()
+    #    if last < int(score):
+    #        f.close()
+    #        file = open('scores.txt', 'w')
+    #        file.write(str(score))
+    #        file.close()
 
-            return score
-        return last
+    #        return score
+        return last"""
 
     def _update_screen(self):
         """Update images on the screen"""
@@ -226,8 +231,8 @@ class HeartGame:
         # add the score
         img = self.font.render(f"Score: {int(self.player.score_value)}", True, (214, 58, 56))
         self.screen.blit(img, (50, 75))
-        bestScore = self.font.render(f"Best Score: {str(updateFile())}", True, (255, 0, 0))
-        self.screen.blit(bestScore, (50, 120))
+        # bestScore = self.font.render(f"Best Score: {str(updateFile())}", True, (255, 0, 0))
+        # self.screen.blit(bestScore, (50, 120))
 
         self.flags.draw(self.screen)
         self.ghosts.draw(self.screen)
@@ -237,9 +242,8 @@ class HeartGame:
         self.player.blitme()
 
         pygame.display.flip()
+game_state = 0
 
-
-if __name__ == '__main__':
-    heart_game = HeartGame()
-    heart_game.run_game()
+heart_game = HeartGame()
+heart_game.run_game()
     # Make a game instance and run it

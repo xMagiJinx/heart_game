@@ -1,4 +1,5 @@
 import pygame
+import scores
 
 class Player:
     """Store the information of a game character"""
@@ -28,8 +29,7 @@ class Player:
         if self.moving_left and self.rect.left > 0:
             self.x -= self.settings.heart_speed
         self.rect.x = self.x
-        clock = pygame.time.Clock()
-        self.score_value += clock.tick()
+        self.score_value += scores.add_scores()
 
     def center_heart(self):
         """Keep the heart at the bottomcenter of the screen"""
