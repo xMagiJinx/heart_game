@@ -32,6 +32,9 @@
 - Don't let your health drop below 0
 ![Heart](https://user-images.githubusercontent.com/115854187/205565957-cb5f2c0f-4403-4af1-95de-ee5263192369.png)
 <img width="100" alt="Heart0" src="https://user-images.githubusercontent.com/115854187/205565966-15e2073b-53db-4abf-8498-e453ef2bc490.png">
+
 - See the high scores that came before you.
+
 - listen to lofi beats in the background
+
 - also sound effects when you gain items or get hit
